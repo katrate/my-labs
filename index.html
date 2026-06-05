@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Labs — Experiments & Projects</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #060608;
+      --surface: #0e0e12;
+      --border: rgba(255, 255, 255, 0.07);
+      --text: #f0eee8;
+      --muted: #6b6a72;
+      --accent: #c8ff00;
+      --accent2: #00ffe0;
+      --accent3: #ff3cac;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom cursor ── */
+    #cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    #cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.18s ease, width 0.25s, height 0.25s, border-color 0.2s;
+      opacity: 0.6;
+    }
+
+    body:has(a:hover) #cursor {
+      width: 20px;
+      height: 20px;
+      background: var(--accent3);
+    }
+
+    body:has(a:hover) #cursor-ring {
+      width: 52px;
+      height: 52px;
+      border-color: var(--accent3);
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Grid bg ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    }
+
+    /* ── Hero ── */
+    header {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+
+    .orb1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(200, 255, 0, 0.12), transparent 70%);
+      top: -10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0, 255, 224, 0.10), transparent 70%);
+      bottom: 5%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 60, 172, 0.09), transparent 70%);
+      top: 40%;
+      left: 30%;
+      animation-delay: -9s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(0, 0) scale(1);
+      }
+
+      to {
+        transform: translate(30px, 20px) scale(1.08);
+      }
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.3em 0.9em;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      display: inline-block;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    h1 {
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      animation: fadeUp 0.9s 0.1s ease both;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--muted);
+      max-width: 480px;
+      margin: 1.8rem auto 0;
+      line-height: 1.7;
+      font-family: 'DM Mono', monospace;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      animation: fadeUp 1.2s 0.5s ease both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: 0.3
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    /* ── Projects section ── */
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 4rem 2rem 8rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Cards grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      animation: fadeUp 0.7s ease both;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+
+    .card:hover {
+      border-color: var(--card-accent, var(--accent));
+      transform: translateY(-6px);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.04), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover .card-glow {
+      opacity: 1;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .card-footer {
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--card-accent, var(--accent));
+    }
+
+    .card-arrow {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: all 0.3s;
+      font-size: 0.85rem;
+    }
+
+    .card:hover .card-arrow {
+      background: var(--card-accent, var(--accent));
+      border-color: var(--card-accent, var(--accent));
+      color: var(--bg);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer span {
+      color: var(--accent);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 3.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <header>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="tag">✦ my little corner of the web</div>
+    <h1>My <span>Labs</span><br>& Builds</h1>
+    <p class="subtitle">A collection of fun things I shipped. Click anything to open it.</p>
+
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      scroll
+    </div>
+  </header>
+
+  <!-- ══════════════ APPS ══════════════ -->
+  <main>
+    <div class="section-label">// APPS</div>
+
+    <div class="grid" id="apps-grid">
+      <!-- APP 1 -->
+      <a class="card" href="https://website-gold-six-23.vercel.app/" target="_blank" rel="noopener"
+        style="--card-accent:#4e65fad4; animation-delay:0.05s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🗂️</span>
+          <div class="card-title">Notie</div>
+          <div class="card-desc">a fully personalised and customizable notes taking app</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">App/Tool/Notes</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- APP2 -->
+      <a class="card" href=" https://fintrack-website-virid.vercel.app/" target="_blank" rel="noopener"
+        style="--card-accent:#00ff00d4; animation-delay:0.10s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🧮</span>
+          <div class="card-title">FinTrack</div>
+          <div class="card-desc">App to track your daily spending</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">App/Tool/Finance</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+    </div>
+
+    <br><br><br>
+
+    <div class="section-label">// WEBSITES</div>
+
+    <div class="grid" id="projects-grid">
+
+      <!--
+    ═══════════════════════════════════════════
+    HOW TO ADD A NEW PROJECT:
+    Copy one <a class="card"> block below,
+    paste it inside #projects-grid, and update:
+      href        → your Vercel URL
+      card-accent → pick a color for this card
+      card-icon   → an emoji that fits
+      card-title  → project name
+      card-desc   → one-line description
+      card-tag    → tech/category label
+    That's it! 🎉
+    ═══════════════════════════════════════════
+    -->
+
+      <!-- PROJECT 1 -->
+      <a class="card" href="https://airdraw-six.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#c8ff00; animation-delay:0.05s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">AirDraw</div>
+          <div class="card-desc">A app to draw on air with hologram type mesh cube</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">game / fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 2 -->
+      <a class="card" href="https://murder-mystery-virid.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#00ffe0; animation-delay:0.1s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🛠️</span>
+          <div class="card-title">Murder Mysteries</div>
+          <div class="card-desc">Become a detective and solve murder mysteries</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">game / fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 3 -->
+      <a class="card" href="https://dragclicker.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#ff3cac; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Speedy Moves</div>
+          <div class="card-desc">Drag fast earn points</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">game / fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 4 -->
+      <a class="card" href="https://pokemon-lac-eight.vercel.app/" target="_blank" rel="noopener"
+        style="--card-accent:#00ff59; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">✨</span>
+          <div class="card-title">Pokemon</div>
+          <div class="card-desc">Pokemon</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 5 -->
+      <a class="card" href="https://ascii-five-opal.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#ff0000; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">✨</span>
+          <div class="card-title">ASCII Art</div>
+          <div class="card-desc">Camera in ASCII Art</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Tool/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 6 -->
+      <a class="card" href="https://snake-swipe.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#afb6ff; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Snake.io</div>
+          <div class="card-desc">Snake game</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Game/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 7 -->
+      <a class="card" href="https://wordle-xi-flax.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#d000ff; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Wordle</div>
+          <div class="card-desc">Wordle game</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Game/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 8 -->
+      <a class="card" href="https://2048-nine-delta.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#00d9ff; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">2048</div>
+          <div class="card-desc">2048 game</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Game/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 9 -->
+      <a class="card" href=" https://rps-inky-five.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#fff200; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Rock Paper Scissors</div>
+          <div class="card-desc">Rock Paper Scissors game</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Game/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+      <!-- PROJECT 10 -->
+      <a class="card" href=" https://type-and-click-test.vercel.app" target="_blank" rel="noopener"
+        style="--card-accent:#fed2e2d4; animation-delay:0.15s">
+        <div class="card-glow"></div>
+        <div class="card-body">
+          <span class="card-icon">📊</span>
+          <div class="card-title">Type and Click Test</div>
+          <div class="card-desc">Type and Click Test</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Tool/Fun</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </a>
+
+
+
+    </div><!-- /grid -->
+  </main>
+
+  <footer>
+    built with <span>♥</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', e => {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top = e.clientY + 'px';
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    });
+
+    // Card spotlight effect
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + '%';
+        const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1) + '%';
+        card.style.setProperty('--mx', x);
+        card.style.setProperty('--my', y);
+      });
+    });
+
+    // Staggered scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.animationPlayState = 'running';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card').forEach(c => {
+      c.style.animationPlayState = 'paused';
+      io.observe(c);
+    });
+  </script>
+</body>
+
+</html>
