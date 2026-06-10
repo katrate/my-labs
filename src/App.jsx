@@ -15,9 +15,6 @@ const PROJ = [
   { icon: '\u2728', title: 'ASCII Art', desc: 'Camera to ASCII real-time.', tag: 'Tool / Web', href: 'https://ascii-five-opal.vercel.app', color: '#ff0000', cat: 3 },
   { icon: '\uD83C\uDFAE', title: 'Snake.io', desc: 'Classic snake reimagined.', tag: 'Game / Web', href: 'https://snake-swipe.vercel.app', color: '#afb6ff', cat: 3 },
   { icon: '\uD83C\uDFAE', title: 'Wordle', desc: 'Word puzzle game clone.', tag: 'Game / Web', href: 'https://wordle-xi-flax.vercel.app', color: '#d000ff', cat: 3 },
-  { icon: '\uD83C\uDFAE', title: '2048', desc: 'Merge tiles to reach 2048.', tag: 'Game / Web', href: 'https://2048-nine-delta.vercel.app', color: '#00d9ff', cat: 3 },
-  { icon: '\uD83E\uDEA8', title: 'RPS', desc: 'Rock Paper Scissors with flair.', tag: 'Game / Web', href: 'https://rps-inky-five.vercel.app', color: '#fff200', cat: 3 },
-  { icon: '\uD83D\uDCCA', title: 'Type & Click', desc: 'Typing and clicking speed test.', tag: 'Tool / Web', href: 'https://type-and-click-test.vercel.app', color: '#fed2e2', cat: 3 },
 ]
 
 const CAT_NAMES = ['App', 'Language', 'CLI', 'Website']
