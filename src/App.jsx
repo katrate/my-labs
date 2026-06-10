@@ -367,7 +367,7 @@ export default function App() {
   }
 
   function drawFooter(ctx, w, h) {
-    const lastX = Math.max(...CARDS.map(c => c.wx)) + CARD_W
+    const lastX = Math.max(...CARDS.map(c => c.wx)) + CARD_W + 300
     const sx = lastX - cam.current
     if (sx < -200 || sx > w + 200) return
     ctx.font = '12px Inter, sans-serif'; ctx.textAlign = 'center'
