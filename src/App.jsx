@@ -43,7 +43,7 @@ uniqueCats.forEach(cat => {
   CARDS.filter(c => c.cat === cat).forEach(p => MENU_ITEMS.push({ t: 'p', ...p }))
 })
 
-const WORLD_W = 5600 + LEFT_PAD
+const WORLD_W = Math.max(...CARDS.map(c => c.wx)) + CARD_W + 400
 
 // ─── BGM ───
 let bgmCtx = null; let bgmGain = null; let bgmPlaying = false
