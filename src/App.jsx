@@ -25,7 +25,7 @@ const GROUP_LAYOUT = [
   { cat: 0, startX: 750 + LEFT_PAD, gap: 280, staggerY: true },
   { cat: 1, startX: 1550 + LEFT_PAD, gap: 280, staggerY: false },
   { cat: 2, startX: 1950 + LEFT_PAD, gap: 250, staggerY: true },
-  { cat: 3, startX: 2600 + LEFT_PAD, gap: 230, staggerY: true },
+  { cat: 3, startX: 2740 + LEFT_PAD, gap: 230, staggerY: true },
 ]
 const CARDS = []
 PROJ.forEach((p, i) => {
