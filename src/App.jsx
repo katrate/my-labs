@@ -8,6 +8,7 @@ const PROJ = [
   { icon: '\u26A1', title: 'Katlans (.kl)', desc: 'Custom language .kl to C to binary.', tag: 'Language / Compiler', href: 'https://github.com/katrate/katlans', color: '#7c3aed', cat: 1 },
   { icon: '\u2328\uFE0F', title: 'Palimpsest', desc: 'Git-inspired snapshot browser TUI.', tag: 'CLI / Tool', href: 'https://github.com/katrate/palimpsest', color: '#c8ff00', cat: 2 },
   { icon: '\uD83D\uDCBB', title: 'ShellMax', desc: 'CLI for workspace and system info.', tag: 'CLI / Tool', href: 'https://github.com/katrate/shellmax', color: '#00ffe0', cat: 2 },
+  { icon: '\uD83D\uDD12', title: 'EnvLock', desc: 'Encrypt .env files for safe Git sharing.', tag: 'CLI / Tool', href: 'https://github.com/katrate/envlock', color: '#ff8800', cat: 2 },
   { icon: '\uD83C\uDFAE', title: 'AirDraw', desc: 'Hologram mesh cube drawing.', tag: 'Web App', href: 'https://airdraw-six.vercel.app', color: '#c8ff00', cat: 3 },
   { icon: '\uD83D\uDEE0\uFE0F', title: 'Murder Mysteries', desc: 'Detective mystery solver.', tag: 'Game / Web', href: 'https://murder-mystery-virid.vercel.app', color: '#00ffe0', cat: 3 },
   { icon: '\uD83C\uDFAE', title: 'Speedy Moves', desc: 'Drag fast arcade action.', tag: 'Game / Web', href: 'https://dragclicker.vercel.app', color: '#ff3cac', cat: 3 },
