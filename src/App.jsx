@@ -16,9 +16,12 @@ const PROJ = [
   { icon: '\u2728', title: 'ASCII Art', desc: 'Camera to ASCII real-time.', tag: 'Tool / Web', href: 'https://ascii-five-opal.vercel.app', color: '#ff0000', cat: 3 },
   { icon: '\uD83C\uDFAE', title: 'Snake.io', desc: 'Classic snake reimagined.', tag: 'Game / Web', href: 'https://snake-swipe.vercel.app', color: '#afb6ff', cat: 3 },
   { icon: '\uD83C\uDFAE', title: 'Wordle', desc: 'Word puzzle game clone.', tag: 'Game / Web', href: 'https://wordle-xi-flax.vercel.app', color: '#d000ff', cat: 3 },
+  { icon: '\uD83C\uDF4E', title: 'Fruit Slicer', desc: 'Fruit slicing arcade game.', tag: 'Game / Web', href: 'https://fruit-slicer-web-zeta.vercel.app/', color: '#ff3cac', cat: 3 },
+  { icon: '\u270B', title: 'Gesture Control', desc: 'Hand gesture recognition with OpenCV.', tag: 'Python / CV', href: '/python/gesture_control.py', color: '#4e65fa', cat: 4, download: true },
+  { icon: '\uD83D\uDC46', title: 'Head Swipe', desc: 'Head movement swipe detection.', tag: 'Python / CV', href: '/python/head_swipe.py', color: '#7c3aed', cat: 4, download: true },
 ]
 
-const CAT_NAMES = ['App', 'Language', 'CLI', 'Website']
+const CAT_NAMES = ['App', 'Language', 'CLI', 'Website', 'Python']
 const CARD_W = 230; const CARD_H = 280
 const LEFT_PAD = 700
 const GROUP_LAYOUT = [
@@ -26,6 +29,7 @@ const GROUP_LAYOUT = [
   { cat: 1, startX: 1550 + LEFT_PAD, gap: 280, staggerY: false },
   { cat: 2, startX: 1950 + LEFT_PAD, gap: 250, staggerY: true },
   { cat: 3, startX: 2900 + LEFT_PAD, gap: 230, staggerY: true },
+  { cat: 4, startX: 5200 + LEFT_PAD, gap: 280, staggerY: false },
 ]
 const CARDS = []
 PROJ.forEach((p, i) => {
@@ -120,6 +124,20 @@ const SFX = {
   pause:   () => sfx(400, 0.15, 'sawtooth', 0.035),
   resume:  () => sfx(600, 0.15, 'sawtooth', 0.035),
   near:    () => sfxNote(1200, 0.07, 0.025),
+}
+
+function openProject(item) {
+  SFX.select()
+  if (item.download) {
+    const a = document.createElement('a')
+    a.href = item.href
+    a.download = item.href.split('/').pop()
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  } else {
+    window.open(item.href, '_blank', 'noopener')
+  }
 }
 
 function Card({ card, cam, g, w, onHover, onLeave, onOpen }) {
@@ -264,7 +282,7 @@ export default function App() {
     const headers = GROUP_LAYOUT.map(grp => ({
       x: grp.startX,
       label: CAT_NAMES[grp.cat].toUpperCase(),
-      color: ['#4e65fa', '#7c3aed', '#00ffe0', '#ff3cac'][grp.cat],
+      color: ['#4e65fa', '#7c3aed', '#00ffe0', '#ff3cac', '#ffd43b'][grp.cat],
     }))
     for (const hdr of headers) {
       const sx = hdr.x - cam.current
@@ -485,8 +503,8 @@ export default function App() {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inp.current.l = true
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inp.current.r = true
       if (e.key === 'Enter') {
-        if (pausedRef.current) { const item = MENU_ITEMS[menuIRef.current]; if (item && item.t === 'p') { SFX.select(); window.open(item.href, '_blank', 'noopener') } }
-        else { const found = CARDS.find(c => c.i === hv.current); if (found) { SFX.select(); window.open(found.href, '_blank', 'noopener') } }
+        if (pausedRef.current) { const item = MENU_ITEMS[menuIRef.current];             if (item && item.t === 'p') { openProject(item) } }
+        else { const found = CARDS.find(c => c.i === hv.current); if (found) { openProject(found) } }
       }
       if (e.key === 'Escape') {
         const was = pausedRef.current
@@ -522,7 +540,7 @@ export default function App() {
       MENU_ITEMS.forEach((item, i) => {
         if (item.t !== 'p') return
         const y = startY + i * 28
-        if (e.clientX >= w/2-170 && e.clientX <= w/2+170 && e.clientY >= y-8 && e.clientY <= y+16) { SFX.select(); window.open(item.href, '_blank', 'noopener') }
+        if (e.clientX >= w/2-170 && e.clientX <= w/2+170 && e.clientY >= y-8 && e.clientY <= y+16) { openProject(item) }
       })
     }
     window.addEventListener('keydown', kd); window.addEventListener('keyup', ku)
@@ -556,7 +574,7 @@ export default function App() {
             w={sz.current.w}
             onHover={(id) => { hv.current = id; setTip(card); setTp({ x: mp.current.x + 12, y: mp.current.y - 10 }); document.body.style.cursor = 'pointer' }}
             onLeave={() => { hv.current = -1; setTip(null); document.body.style.cursor = 'default' }}
-            onOpen={(c) => { SFX.select(); window.open(c.href, '_blank', 'noopener') }}
+            onOpen={(c) => { openProject(c) }}
           />
         ))}
       </div>
